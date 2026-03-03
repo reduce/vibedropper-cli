@@ -22,7 +22,7 @@ func TestListsList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "list",
-		"--limit", "0",
+		"--limit", "100",
 		"--page", "0",
 	)
 }

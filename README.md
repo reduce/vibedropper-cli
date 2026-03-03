@@ -49,7 +49,7 @@ vibedropper [resource] <command> [flags...]
 
 ```sh
 vibedropper lists list \
-  --limit 0 \
+  --limit 100 \
   --page 0
 ```
 

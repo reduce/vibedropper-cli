@@ -38,6 +38,30 @@ var customersUpdate = cli.Command{
 			Name:     "customer-id",
 			Required: true,
 		},
+		&requestflag.Flag[any]{
+			Name:     "address-line1",
+			BodyPath: "addressLine1",
+		},
+		&requestflag.Flag[any]{
+			Name:     "address-line2",
+			BodyPath: "addressLine2",
+		},
+		&requestflag.Flag[any]{
+			Name:     "city",
+			BodyPath: "city",
+		},
+		&requestflag.Flag[any]{
+			Name:     "country",
+			BodyPath: "country",
+		},
+		&requestflag.Flag[any]{
+			Name:     "first-name",
+			BodyPath: "firstName",
+		},
+		&requestflag.Flag[any]{
+			Name:     "last-name",
+			BodyPath: "lastName",
+		},
 		&requestflag.Flag[string]{
 			Name:     "name",
 			BodyPath: "name",
@@ -47,8 +71,16 @@ var customersUpdate = cli.Command{
 			BodyPath: "pickupLocationId",
 		},
 		&requestflag.Flag[any]{
+			Name:     "postal-code",
+			BodyPath: "postalCode",
+		},
+		&requestflag.Flag[any]{
 			Name:     "region-id",
 			BodyPath: "regionId",
+		},
+		&requestflag.Flag[any]{
+			Name:     "state",
+			BodyPath: "state",
 		},
 	},
 	Action:          handleCustomersUpdate,
@@ -72,6 +104,7 @@ var customersList = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:      "search",
+			Usage:     "Search by name or email",
 			QueryPath: "search",
 		},
 	},

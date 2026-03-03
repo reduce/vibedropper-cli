@@ -23,9 +23,17 @@ func TestCustomersUpdate(t *testing.T) {
 		t,
 		"customers", "update",
 		"--customer-id", "customerId",
+		"--address-line1", "addressLine1",
+		"--address-line2", "addressLine2",
+		"--city", "city",
+		"--country", "country",
+		"--first-name", "firstName",
+		"--last-name", "lastName",
 		"--name", "name",
 		"--pickup-location-id", "pickupLocationId",
+		"--postal-code", "postalCode",
 		"--region-id", "regionId",
+		"--state", "state",
 	)
 }
 
@@ -34,7 +42,7 @@ func TestCustomersList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"customers", "list",
-		"--limit", "0",
+		"--limit", "100",
 		"--page", "0",
 		"--search", "search",
 	)
