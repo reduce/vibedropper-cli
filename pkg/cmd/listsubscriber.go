@@ -31,7 +31,7 @@ var listsSubscribersList = cli.Command{
 
 var listsSubscribersAdd = cli.Command{
 	Name:    "add",
-	Usage:   "Add subscriber",
+	Usage:   "Add subscriber to list",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -66,7 +66,7 @@ var listsSubscribersAdd = cli.Command{
 
 var listsSubscribersRemove = cli.Command{
 	Name:    "remove",
-	Usage:   "Remove subscriber",
+	Usage:   "Remove subscriber from list",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
