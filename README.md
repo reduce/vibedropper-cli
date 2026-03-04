@@ -49,14 +49,20 @@ vibedropper [resource] <command> [flags...]
 
 ```sh
 vibedropper lists list \
-  --limit 100 \
-  --page 0
+  --api-key 'My API Key'
 ```
 
 For details about specific commands, use the `--help` flag.
 
-### Global Flags
+### Environment variables
 
+| Environment variable  | Description                                                                                                     | Required |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- | -------- |
+| `VIBEDROPPER_API_KEY` | API key from Organization Settings > API. Use header: Authorization: Bearer <your_key> or X-API-Key: <your_key> | yes      |
+
+### Global flags
+
+- `--api-key` - API key from Organization Settings > API. Use header: Authorization: Bearer <your_key> or X-API-Key: <your_key> (can also be set with `VIBEDROPPER_API_KEY` env var)
 - `--help` - Show command line usage
 - `--debug` - Enable debug logging (includes HTTP request/response details)
 - `--version`, `-v` - Show the CLI version

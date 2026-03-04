@@ -13,6 +13,7 @@ func TestKnowledgeBasesArticlesCreate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"knowledge-bases:articles", "create",
+		"--api-key", "string",
 		"--kb-id", "kbId",
 		"--title", "title",
 		"--category-id", "categoryId",
@@ -27,6 +28,7 @@ func TestKnowledgeBasesArticlesList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"knowledge-bases:articles", "list",
+		"--api-key", "string",
 		"--kb-id", "kbId",
 		"--limit", "100",
 		"--page", "0",

@@ -13,6 +13,7 @@ func TestCustomersRetrieve(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"customers", "retrieve",
+		"--api-key", "string",
 		"--customer-id", "customerId",
 	)
 }
@@ -22,6 +23,7 @@ func TestCustomersUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"customers", "update",
+		"--api-key", "string",
 		"--customer-id", "customerId",
 		"--address-line1", "addressLine1",
 		"--address-line2", "addressLine2",
@@ -42,6 +44,7 @@ func TestCustomersList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"customers", "list",
+		"--api-key", "string",
 		"--limit", "100",
 		"--page", "0",
 		"--search", "search",
