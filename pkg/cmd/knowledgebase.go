@@ -57,7 +57,7 @@ var knowledgeBasesUpdate = cli.Command{
 
 var knowledgeBasesList = cli.Command{
 	Name:            "list",
-	Usage:           "List knowledge bases",
+	Usage:           "Returns all knowledge bases ordered by sortOrder then creation date.",
 	Suggest:         true,
 	Flags:           []cli.Flag{},
 	Action:          handleKnowledgeBasesList,

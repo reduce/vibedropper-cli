@@ -17,7 +17,7 @@ import (
 
 var listsSubscribersList = cli.Command{
 	Name:    "list",
-	Usage:   "List subscribers",
+	Usage:   "Returns all subscribers for the list ordered by subscribe date descending.\nIncludes linked customer data.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -31,7 +31,7 @@ var listsSubscribersList = cli.Command{
 
 var listsSubscribersAdd = cli.Command{
 	Name:    "add",
-	Usage:   "Add subscriber to list",
+	Usage:   "Creates or updates the matching customer record and adds a subscriber entry.\nReturns 400 with code `duplicate` if already subscribed.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -45,6 +45,7 @@ var listsSubscribersAdd = cli.Command{
 		},
 		&requestflag.Flag[any]{
 			Name:     "custom-fields",
+			Usage:    "Arbitrary key-value metadata",
 			BodyPath: "customFields",
 		},
 		&requestflag.Flag[string]{
@@ -53,10 +54,12 @@ var listsSubscribersAdd = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "pickup-location-id",
+			Usage:    "Pickup location ID (must belong to the given regionId)",
 			BodyPath: "pickupLocationId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "region-id",
+			Usage:    "Region ID to assign to the customer",
 			BodyPath: "regionId",
 		},
 	},
@@ -66,7 +69,7 @@ var listsSubscribersAdd = cli.Command{
 
 var listsSubscribersRemove = cli.Command{
 	Name:    "remove",
-	Usage:   "Remove subscriber from list",
+	Usage:   "Remove a subscriber from a list",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{

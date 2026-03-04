@@ -35,7 +35,7 @@ var knowledgeBasesArticlesCreate = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "content",
-			Usage:    "HTML or markdown content",
+			Usage:    "HTML content",
 			BodyPath: "content",
 		},
 		&requestflag.Flag[any]{
