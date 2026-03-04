@@ -8,20 +8,26 @@ import (
 	"github.com/stainless-sdks/vibedropper-cli/internal/mocktest"
 )
 
-func TestListsRetrieve(t *testing.T) {
+func TestKnowledgeBasesArticlesCreate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
-		"lists", "retrieve",
-		"--list-id", "listId",
+		"knowledge-bases:articles", "create",
+		"--kb-id", "kbId",
+		"--title", "title",
+		"--category-id", "categoryId",
+		"--content", "content",
+		"--excerpt", "excerpt",
+		"--published=true",
 	)
 }
 
-func TestListsList(t *testing.T) {
+func TestKnowledgeBasesArticlesList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	mocktest.TestRunMockTestWithFlags(
 		t,
-		"lists", "list",
+		"knowledge-bases:articles", "list",
+		"--kb-id", "kbId",
 		"--limit", "100",
 		"--page", "0",
 	)
