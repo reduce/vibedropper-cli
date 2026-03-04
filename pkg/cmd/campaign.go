@@ -17,7 +17,7 @@ import (
 
 var campaignsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get campaign",
+	Usage:   "Get a campaign",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -30,21 +30,10 @@ var campaignsRetrieve = cli.Command{
 }
 
 var campaignsList = cli.Command{
-	Name:    "list",
-	Usage:   "List campaigns",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[int64]{
-			Name:      "limit",
-			Default:   20,
-			QueryPath: "limit",
-		},
-		&requestflag.Flag[int64]{
-			Name:      "page",
-			Default:   1,
-			QueryPath: "page",
-		},
-	},
+	Name:            "list",
+	Usage:           "Returns all campaigns for the organization ordered by creation date descending.\nNo pagination.",
+	Suggest:         true,
+	Flags:           []cli.Flag{},
 	Action:          handleCampaignsList,
 	HideHelpCommand: true,
 }
@@ -92,8 +81,6 @@ func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.CampaignListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -107,7 +94,7 @@ func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Campaigns.List(ctx, params, options...)
+	_, err = client.Campaigns.List(ctx, options...)
 	if err != nil {
 		return err
 	}

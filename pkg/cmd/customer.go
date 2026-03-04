@@ -17,7 +17,7 @@ import (
 
 var customersRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get customer",
+	Usage:   "Get a customer",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -31,7 +31,7 @@ var customersRetrieve = cli.Command{
 
 var customersUpdate = cli.Command{
 	Name:    "update",
-	Usage:   "Update customer",
+	Usage:   "Update a customer",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -104,7 +104,7 @@ var customersList = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:      "search",
-			Usage:     "Search by name or email",
+			Usage:     "Search by name or email (case-insensitive)",
 			QueryPath: "search",
 		},
 	},
