@@ -22,7 +22,5 @@ func TestCampaignsList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"campaigns", "list",
-		"--limit", "100",
-		"--page", "0",
 	)
 }
