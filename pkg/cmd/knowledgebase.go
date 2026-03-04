@@ -15,78 +15,74 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var listsSubscribersList = cli.Command{
-	Name:    "list",
-	Usage:   "List subscribers",
+var knowledgeBasesRetrieve = cli.Command{
+	Name:    "retrieve",
+	Usage:   "Get a knowledge base",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
+			Name:     "kb-id",
 			Required: true,
 		},
 	},
-	Action:          handleListsSubscribersList,
+	Action:          handleKnowledgeBasesRetrieve,
 	HideHelpCommand: true,
 }
 
-var listsSubscribersAdd = cli.Command{
-	Name:    "add",
-	Usage:   "Add subscriber to list",
+var knowledgeBasesUpdate = cli.Command{
+	Name:    "update",
+	Usage:   "Update a knowledge base",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
+			Name:     "kb-id",
 			Required: true,
-		},
-		&requestflag.Flag[string]{
-			Name:     "email",
-			Required: true,
-			BodyPath: "email",
 		},
 		&requestflag.Flag[any]{
-			Name:     "custom-fields",
-			BodyPath: "customFields",
+			Name:     "description",
+			BodyPath: "description",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
 			BodyPath: "name",
 		},
-		&requestflag.Flag[string]{
-			Name:     "pickup-location-id",
-			BodyPath: "pickupLocationId",
-		},
-		&requestflag.Flag[string]{
-			Name:     "region-id",
-			BodyPath: "regionId",
+		&requestflag.Flag[int64]{
+			Name:     "sort-order",
+			BodyPath: "sortOrder",
 		},
 	},
-	Action:          handleListsSubscribersAdd,
+	Action:          handleKnowledgeBasesUpdate,
 	HideHelpCommand: true,
 }
 
-var listsSubscribersRemove = cli.Command{
-	Name:    "remove",
-	Usage:   "Remove subscriber from list",
+var knowledgeBasesList = cli.Command{
+	Name:            "list",
+	Usage:           "List knowledge bases",
+	Suggest:         true,
+	Flags:           []cli.Flag{},
+	Action:          handleKnowledgeBasesList,
+	HideHelpCommand: true,
+}
+
+var knowledgeBasesDelete = cli.Command{
+	Name:    "delete",
+	Usage:   "Delete a knowledge base",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
-		},
-		&requestflag.Flag[string]{
-			Name:     "subscriber-id",
+			Name:     "kb-id",
 			Required: true,
 		},
 	},
-	Action:          handleListsSubscribersRemove,
+	Action:          handleKnowledgeBasesDelete,
 	HideHelpCommand: true,
 }
 
-func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesRetrieve(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("list-id") && len(unusedArgs) > 0 {
-		cmd.Set("list-id", unusedArgs[0])
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -106,7 +102,7 @@ func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Lists.Subscribers.List(ctx, cmd.Value("list-id").(string), options...)
+	_, err = client.KnowledgeBases.Get(ctx, cmd.Value("kb-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -114,21 +110,21 @@ func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers list", obj, format, transform)
+	return ShowJSON(os.Stdout, "knowledge-bases retrieve", obj, format, transform)
 }
 
-func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesUpdate(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("list-id") && len(unusedArgs) > 0 {
-		cmd.Set("list-id", unusedArgs[0])
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.ListSubscriberAddParams{}
+	params := vibedropper.KnowledgeBaseUpdateParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -143,9 +139,9 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Lists.Subscribers.Add(
+	_, err = client.KnowledgeBases.Update(
 		ctx,
-		cmd.Value("list-id").(string),
+		cmd.Value("kb-id").(string),
 		params,
 		options...,
 	)
@@ -156,22 +152,15 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers add", obj, format, transform)
+	return ShowJSON(os.Stdout, "knowledge-bases update", obj, format, transform)
 }
 
-func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesList(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("subscriber-id") && len(unusedArgs) > 0 {
-		cmd.Set("subscriber-id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
+
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	params := vibedropper.ListSubscriberRemoveParams{
-		ListID: cmd.Value("list-id").(string),
 	}
 
 	options, err := flagOptions(
@@ -187,12 +176,7 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Lists.Subscribers.Remove(
-		ctx,
-		cmd.Value("subscriber-id").(string),
-		params,
-		options...,
-	)
+	_, err = client.KnowledgeBases.List(ctx, options...)
 	if err != nil {
 		return err
 	}
@@ -200,5 +184,30 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers remove", obj, format, transform)
+	return ShowJSON(os.Stdout, "knowledge-bases list", obj, format, transform)
+}
+
+func handleKnowledgeBasesDelete(ctx context.Context, cmd *cli.Command) error {
+	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	return client.KnowledgeBases.Delete(ctx, cmd.Value("kb-id").(string), options...)
 }

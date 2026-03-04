@@ -11,7 +11,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/reduce/vibedropper-cli/internal/autocomplete"
+	"github.com/stainless-sdks/vibedropper-cli/internal/autocomplete"
 	docs "github.com/urfave/cli-docs/v3"
 	"github.com/urfave/cli/v3"
 )
@@ -104,6 +104,49 @@ func init() {
 				Commands: []*cli.Command{
 					&campaignsRetrieve,
 					&campaignsList,
+				},
+			},
+			{
+				Name:     "forms",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&formsRetrieve,
+					&formsUpdate,
+					&formsList,
+					&formsDelete,
+					&formsListSubmissions,
+				},
+			},
+			{
+				Name:     "knowledge-bases",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&knowledgeBasesRetrieve,
+					&knowledgeBasesUpdate,
+					&knowledgeBasesList,
+					&knowledgeBasesDelete,
+				},
+			},
+			{
+				Name:     "knowledge-bases:articles",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&knowledgeBasesArticlesCreate,
+					&knowledgeBasesArticlesList,
+				},
+			},
+			{
+				Name:     "pages",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&pagesRetrieve,
+					&pagesUpdate,
+					&pagesList,
+					&pagesDelete,
 				},
 			},
 			{

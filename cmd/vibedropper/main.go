@@ -10,8 +10,8 @@ import (
 	"os"
 	"slices"
 
-	"github.com/reduce/vibedropper-cli/pkg/cmd"
-	"github.com/reduce/vibedropper-go"
+	"github.com/stainless-sdks/vibedropper-cli/pkg/cmd"
+	"github.com/stainless-sdks/vibedropper-go"
 	"github.com/tidwall/gjson"
 	"github.com/urfave/cli/v3"
 )

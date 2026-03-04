@@ -15,25 +15,52 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var campaignsRetrieve = cli.Command{
-	Name:    "retrieve",
-	Usage:   "Get campaign",
+var knowledgeBasesArticlesCreate = cli.Command{
+	Name:    "create",
+	Usage:   "Create an article",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "campaign-id",
+			Name:     "kb-id",
 			Required: true,
 		},
+		&requestflag.Flag[string]{
+			Name:     "title",
+			Required: true,
+			BodyPath: "title",
+		},
+		&requestflag.Flag[any]{
+			Name:     "category-id",
+			BodyPath: "categoryId",
+		},
+		&requestflag.Flag[string]{
+			Name:     "content",
+			Usage:    "HTML or markdown content",
+			BodyPath: "content",
+		},
+		&requestflag.Flag[any]{
+			Name:     "excerpt",
+			BodyPath: "excerpt",
+		},
+		&requestflag.Flag[bool]{
+			Name:     "published",
+			Default:  true,
+			BodyPath: "published",
+		},
 	},
-	Action:          handleCampaignsRetrieve,
+	Action:          handleKnowledgeBasesArticlesCreate,
 	HideHelpCommand: true,
 }
 
-var campaignsList = cli.Command{
+var knowledgeBasesArticlesList = cli.Command{
 	Name:    "list",
-	Usage:   "List campaigns",
+	Usage:   "List articles in a knowledge base",
 	Suggest: true,
 	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:     "kb-id",
+			Required: true,
+		},
 		&requestflag.Flag[int64]{
 			Name:      "limit",
 			Default:   20,
@@ -45,26 +72,28 @@ var campaignsList = cli.Command{
 			QueryPath: "page",
 		},
 	},
-	Action:          handleCampaignsList,
+	Action:          handleKnowledgeBasesArticlesList,
 	HideHelpCommand: true,
 }
 
-func handleCampaignsRetrieve(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesArticlesCreate(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("campaign-id") && len(unusedArgs) > 0 {
-		cmd.Set("campaign-id", unusedArgs[0])
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
+	params := vibedropper.KnowledgeBaseArticleNewParams{}
+
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
 		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
+		ApplicationJSON,
 		false,
 	)
 	if err != nil {
@@ -73,7 +102,12 @@ func handleCampaignsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Campaigns.Get(ctx, cmd.Value("campaign-id").(string), options...)
+	_, err = client.KnowledgeBases.Articles.New(
+		ctx,
+		cmd.Value("kb-id").(string),
+		params,
+		options...,
+	)
 	if err != nil {
 		return err
 	}
@@ -81,18 +115,21 @@ func handleCampaignsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "campaigns retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, "knowledge-bases:articles create", obj, format, transform)
 }
 
-func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.CampaignListParams{}
+	params := vibedropper.KnowledgeBaseArticleListParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -107,7 +144,12 @@ func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Campaigns.List(ctx, params, options...)
+	_, err = client.KnowledgeBases.Articles.List(
+		ctx,
+		cmd.Value("kb-id").(string),
+		params,
+		options...,
+	)
 	if err != nil {
 		return err
 	}
@@ -115,5 +157,5 @@ func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "campaigns list", obj, format, transform)
+	return ShowJSON(os.Stdout, "knowledge-bases:articles list", obj, format, transform)
 }

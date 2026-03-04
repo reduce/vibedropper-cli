@@ -15,78 +15,90 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var listsSubscribersList = cli.Command{
-	Name:    "list",
-	Usage:   "List subscribers",
+var pagesRetrieve = cli.Command{
+	Name:    "retrieve",
+	Usage:   "Get a page",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
+			Name:     "page-id",
 			Required: true,
 		},
 	},
-	Action:          handleListsSubscribersList,
+	Action:          handlePagesRetrieve,
 	HideHelpCommand: true,
 }
 
-var listsSubscribersAdd = cli.Command{
-	Name:    "add",
-	Usage:   "Add subscriber to list",
+var pagesUpdate = cli.Command{
+	Name:    "update",
+	Usage:   "Update a page",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
+			Name:     "page-id",
 			Required: true,
-		},
-		&requestflag.Flag[string]{
-			Name:     "email",
-			Required: true,
-			BodyPath: "email",
 		},
 		&requestflag.Flag[any]{
-			Name:     "custom-fields",
-			BodyPath: "customFields",
+			Name:     "description",
+			BodyPath: "description",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
 			BodyPath: "name",
 		},
 		&requestflag.Flag[string]{
-			Name:     "pickup-location-id",
-			BodyPath: "pickupLocationId",
-		},
-		&requestflag.Flag[string]{
-			Name:     "region-id",
-			BodyPath: "regionId",
+			Name:     "status",
+			BodyPath: "status",
 		},
 	},
-	Action:          handleListsSubscribersAdd,
+	Action:          handlePagesUpdate,
 	HideHelpCommand: true,
 }
 
-var listsSubscribersRemove = cli.Command{
-	Name:    "remove",
-	Usage:   "Remove subscriber from list",
+var pagesList = cli.Command{
+	Name:    "list",
+	Usage:   "List pages",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[int64]{
+			Name:      "limit",
+			Default:   20,
+			QueryPath: "limit",
+		},
+		&requestflag.Flag[int64]{
+			Name:      "page",
+			Default:   1,
+			QueryPath: "page",
+		},
+		&requestflag.Flag[string]{
+			Name:      "status",
+			Usage:     `Filter by status. Omit or use "all" to return all pages.`,
+			QueryPath: "status",
+		},
+	},
+	Action:          handlePagesList,
+	HideHelpCommand: true,
+}
+
+var pagesDelete = cli.Command{
+	Name:    "delete",
+	Usage:   "Delete a page",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
-		},
-		&requestflag.Flag[string]{
-			Name:     "subscriber-id",
+			Name:     "page-id",
 			Required: true,
 		},
 	},
-	Action:          handleListsSubscribersRemove,
+	Action:          handlePagesDelete,
 	HideHelpCommand: true,
 }
 
-func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
+func handlePagesRetrieve(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("list-id") && len(unusedArgs) > 0 {
-		cmd.Set("list-id", unusedArgs[0])
+	if !cmd.IsSet("page-id") && len(unusedArgs) > 0 {
+		cmd.Set("page-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -106,7 +118,7 @@ func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Lists.Subscribers.List(ctx, cmd.Value("list-id").(string), options...)
+	_, err = client.Pages.Get(ctx, cmd.Value("page-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -114,21 +126,21 @@ func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers list", obj, format, transform)
+	return ShowJSON(os.Stdout, "pages retrieve", obj, format, transform)
 }
 
-func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
+func handlePagesUpdate(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("list-id") && len(unusedArgs) > 0 {
-		cmd.Set("list-id", unusedArgs[0])
+	if !cmd.IsSet("page-id") && len(unusedArgs) > 0 {
+		cmd.Set("page-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.ListSubscriberAddParams{}
+	params := vibedropper.PageUpdateParams{}
 
 	options, err := flagOptions(
 		cmd,
@@ -143,9 +155,9 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Lists.Subscribers.Add(
+	_, err = client.Pages.Update(
 		ctx,
-		cmd.Value("list-id").(string),
+		cmd.Value("page-id").(string),
 		params,
 		options...,
 	)
@@ -156,22 +168,52 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers add", obj, format, transform)
+	return ShowJSON(os.Stdout, "pages update", obj, format, transform)
 }
 
-func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
+func handlePagesList(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("subscriber-id") && len(unusedArgs) > 0 {
-		cmd.Set("subscriber-id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
+
 	if len(unusedArgs) > 0 {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.ListSubscriberRemoveParams{
-		ListID: cmd.Value("list-id").(string),
+	params := vibedropper.PageListParams{}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Pages.List(ctx, params, options...)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(os.Stdout, "pages list", obj, format, transform)
+}
+
+func handlePagesDelete(ctx context.Context, cmd *cli.Command) error {
+	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("page-id") && len(unusedArgs) > 0 {
+		cmd.Set("page-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
 	options, err := flagOptions(
@@ -187,12 +229,7 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Lists.Subscribers.Remove(
-		ctx,
-		cmd.Value("subscriber-id").(string),
-		params,
-		options...,
-	)
+	_, err = client.Pages.Delete(ctx, cmd.Value("page-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -200,5 +237,5 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers remove", obj, format, transform)
+	return ShowJSON(os.Stdout, "pages delete", obj, format, transform)
 }
