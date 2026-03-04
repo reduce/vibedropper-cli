@@ -14,11 +14,11 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"github.com/reduce/vibedropper-go/option"
 	"github.com/stainless-sdks/vibedropper-cli/internal/apiform"
 	"github.com/stainless-sdks/vibedropper-cli/internal/apiquery"
 	"github.com/stainless-sdks/vibedropper-cli/internal/debugmiddleware"
 	"github.com/stainless-sdks/vibedropper-cli/internal/requestflag"
-	"github.com/stainless-sdks/vibedropper-go/option"
 
 	"github.com/goccy/go-yaml"
 	"github.com/urfave/cli/v3"
