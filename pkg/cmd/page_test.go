@@ -13,6 +13,7 @@ func TestPagesRetrieve(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"pages", "retrieve",
+		"--api-key", "string",
 		"--page-id", "pageId",
 	)
 }
@@ -22,6 +23,7 @@ func TestPagesUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"pages", "update",
+		"--api-key", "string",
 		"--page-id", "pageId",
 		"--description", "description",
 		"--name", "name",
@@ -34,6 +36,7 @@ func TestPagesList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"pages", "list",
+		"--api-key", "string",
 		"--limit", "100",
 		"--page", "0",
 		"--status", "DRAFT",
@@ -45,6 +48,7 @@ func TestPagesDelete(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"pages", "delete",
+		"--api-key", "string",
 		"--page-id", "pageId",
 	)
 }
