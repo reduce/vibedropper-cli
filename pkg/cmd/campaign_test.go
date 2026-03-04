@@ -13,6 +13,7 @@ func TestCampaignsRetrieve(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"campaigns", "retrieve",
+		"--api-key", "string",
 		"--campaign-id", "campaignId",
 	)
 }
@@ -22,5 +23,6 @@ func TestCampaignsList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"campaigns", "list",
+		"--api-key", "string",
 	)
 }

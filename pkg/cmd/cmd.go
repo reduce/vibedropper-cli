@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/reduce/vibedropper-cli/internal/autocomplete"
+	"github.com/reduce/vibedropper-cli/internal/requestflag"
 	docs "github.com/urfave/cli-docs/v3"
 	"github.com/urfave/cli/v3"
 )
@@ -65,6 +66,11 @@ func init() {
 			&cli.StringFlag{
 				Name:  "transform-error",
 				Usage: "The GJSON transformation for errors.",
+			},
+			&requestflag.Flag[string]{
+				Name:    "api-key",
+				Usage:   "API key from Organization Settings > API. Use header: Authorization: Bearer <your_key> or X-API-Key: <your_key>",
+				Sources: cli.EnvVars("VIBEDROPPER_API_KEY"),
 			},
 		},
 		Commands: []*cli.Command{

@@ -13,6 +13,7 @@ func TestListsRetrieve(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "retrieve",
+		"--api-key", "string",
 		"--list-id", "listId",
 	)
 }
@@ -22,6 +23,7 @@ func TestListsList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists", "list",
+		"--api-key", "string",
 		"--limit", "100",
 		"--page", "0",
 	)

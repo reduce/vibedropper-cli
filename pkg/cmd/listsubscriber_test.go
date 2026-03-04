@@ -13,6 +13,7 @@ func TestListsSubscribersList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists:subscribers", "list",
+		"--api-key", "string",
 		"--list-id", "listId",
 	)
 }
@@ -22,6 +23,7 @@ func TestListsSubscribersAdd(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists:subscribers", "add",
+		"--api-key", "string",
 		"--list-id", "listId",
 		"--email", "dev@stainless.com",
 		"--custom-fields", "{}",
@@ -36,6 +38,7 @@ func TestListsSubscribersRemove(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"lists:subscribers", "remove",
+		"--api-key", "string",
 		"--list-id", "listId",
 		"--subscriber-id", "subscriberId",
 	)

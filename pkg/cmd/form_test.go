@@ -13,6 +13,7 @@ func TestFormsRetrieve(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"forms", "retrieve",
+		"--api-key", "string",
 		"--form-id", "formId",
 	)
 }
@@ -22,6 +23,7 @@ func TestFormsUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"forms", "update",
+		"--api-key", "string",
 		"--form-id", "formId",
 		"--description", "description",
 		"--list-id", "listId",
@@ -36,6 +38,7 @@ func TestFormsList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"forms", "list",
+		"--api-key", "string",
 		"--limit", "100",
 		"--page", "0",
 		"--status", "DRAFT",
@@ -47,6 +50,7 @@ func TestFormsDelete(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"forms", "delete",
+		"--api-key", "string",
 		"--form-id", "formId",
 	)
 }
@@ -56,6 +60,7 @@ func TestFormsListSubmissions(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"forms", "list-submissions",
+		"--api-key", "string",
 		"--form-id", "formId",
 		"--limit", "100",
 		"--page", "0",

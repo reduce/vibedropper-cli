@@ -13,6 +13,7 @@ func TestKnowledgeBasesRetrieve(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"knowledge-bases", "retrieve",
+		"--api-key", "string",
 		"--kb-id", "kbId",
 	)
 }
@@ -22,6 +23,7 @@ func TestKnowledgeBasesUpdate(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"knowledge-bases", "update",
+		"--api-key", "string",
 		"--kb-id", "kbId",
 		"--description", "description",
 		"--name", "name",
@@ -34,6 +36,7 @@ func TestKnowledgeBasesList(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"knowledge-bases", "list",
+		"--api-key", "string",
 	)
 }
 
@@ -42,6 +45,7 @@ func TestKnowledgeBasesDelete(t *testing.T) {
 	mocktest.TestRunMockTestWithFlags(
 		t,
 		"knowledge-bases", "delete",
+		"--api-key", "string",
 		"--kb-id", "kbId",
 	)
 }
