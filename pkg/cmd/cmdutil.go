@@ -14,8 +14,8 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/reduce/vibedropper-go/option"
 	"github.com/stainless-sdks/vibedropper-cli/internal/jsonview"
-	"github.com/stainless-sdks/vibedropper-go/option"
 
 	"github.com/charmbracelet/x/term"
 	"github.com/itchyny/json2yaml"

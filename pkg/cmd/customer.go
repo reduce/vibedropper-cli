@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/reduce/vibedropper-go"
+	"github.com/reduce/vibedropper-go/option"
 	"github.com/stainless-sdks/vibedropper-cli/internal/apiquery"
 	"github.com/stainless-sdks/vibedropper-cli/internal/requestflag"
-	"github.com/stainless-sdks/vibedropper-go"
-	"github.com/stainless-sdks/vibedropper-go/option"
 	"github.com/tidwall/gjson"
 	"github.com/urfave/cli/v3"
 )
