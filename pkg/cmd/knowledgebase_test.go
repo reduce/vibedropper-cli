@@ -5,7 +5,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/stainless-sdks/vibedropper-cli/internal/mocktest"
+	"github.com/reduce/vibedropper-cli/internal/mocktest"
 )
 
 func TestKnowledgeBasesRetrieve(t *testing.T) {

@@ -11,7 +11,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/stainless-sdks/vibedropper-cli/internal/autocomplete"
+	"github.com/reduce/vibedropper-cli/internal/autocomplete"
 	docs "github.com/urfave/cli-docs/v3"
 	"github.com/urfave/cli/v3"
 )
