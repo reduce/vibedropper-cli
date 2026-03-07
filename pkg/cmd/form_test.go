@@ -10,59 +10,79 @@ import (
 
 func TestFormsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"forms", "retrieve",
-		"--api-key", "string",
-		"--form-id", "formId",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "forms", "retrieve",
+			"--api-key", "string",
+			"--form-id", "formId",
+		)
+	})
 }
 
 func TestFormsUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"forms", "update",
-		"--api-key", "string",
-		"--form-id", "formId",
-		"--description", "description",
-		"--list-id", "listId",
-		"--status", "DRAFT",
-		"--success-message", "successMessage",
-		"--title", "title",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "forms", "update",
+			"--api-key", "string",
+			"--form-id", "formId",
+			"--description", "description",
+			"--list-id", "listId",
+			"--status", "DRAFT",
+			"--success-message", "successMessage",
+			"--title", "title",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"description: description\n" +
+			"listId: listId\n" +
+			"status: DRAFT\n" +
+			"successMessage: successMessage\n" +
+			"title: title\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "forms", "update",
+			"--api-key", "string",
+			"--form-id", "formId",
+		)
+	})
 }
 
 func TestFormsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"forms", "list",
-		"--api-key", "string",
-		"--limit", "100",
-		"--page", "0",
-		"--status", "DRAFT",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "forms", "list",
+			"--api-key", "string",
+			"--limit", "100",
+			"--page", "0",
+			"--status", "DRAFT",
+		)
+	})
 }
 
 func TestFormsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"forms", "delete",
-		"--api-key", "string",
-		"--form-id", "formId",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "forms", "delete",
+			"--api-key", "string",
+			"--form-id", "formId",
+		)
+	})
 }
 
 func TestFormsListSubmissions(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"forms", "list-submissions",
-		"--api-key", "string",
-		"--form-id", "formId",
-		"--limit", "100",
-		"--page", "0",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "forms", "list-submissions",
+			"--api-key", "string",
+			"--form-id", "formId",
+			"--limit", "100",
+			"--page", "0",
+		)
+	})
 }
