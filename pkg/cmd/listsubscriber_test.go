@@ -10,36 +10,54 @@ import (
 
 func TestListsSubscribersList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists:subscribers", "list",
-		"--api-key", "string",
-		"--list-id", "listId",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists:subscribers", "list",
+			"--api-key", "string",
+			"--list-id", "listId",
+		)
+	})
 }
 
 func TestListsSubscribersAdd(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists:subscribers", "add",
-		"--api-key", "string",
-		"--list-id", "listId",
-		"--email", "dev@stainless.com",
-		"--custom-fields", "{}",
-		"--name", "name",
-		"--pickup-location-id", "pickupLocationId",
-		"--region-id", "regionId",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists:subscribers", "add",
+			"--api-key", "string",
+			"--list-id", "listId",
+			"--email", "dev@stainless.com",
+			"--custom-fields", "{}",
+			"--name", "name",
+			"--pickup-location-id", "pickupLocationId",
+			"--region-id", "regionId",
+		)
+	})
+
+	t.Run("piping data", func(t *testing.T) {
+		// Test piping YAML data over stdin
+		pipeData := []byte("" +
+			"email: dev@stainless.com\n" +
+			"customFields: {}\n" +
+			"name: name\n" +
+			"pickupLocationId: pickupLocationId\n" +
+			"regionId: regionId\n")
+		mocktest.TestRunMockTestWithPipeAndFlags(
+			t, pipeData, "lists:subscribers", "add",
+			"--api-key", "string",
+			"--list-id", "listId",
+		)
+	})
 }
 
 func TestListsSubscribersRemove(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists:subscribers", "remove",
-		"--api-key", "string",
-		"--list-id", "listId",
-		"--subscriber-id", "subscriberId",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t, "lists:subscribers", "remove",
+			"--api-key", "string",
+			"--list-id", "listId",
+			"--subscriber-id", "subscriberId",
+		)
+	})
 }
