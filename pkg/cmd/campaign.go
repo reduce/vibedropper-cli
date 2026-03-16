@@ -17,7 +17,7 @@ import (
 
 var campaignsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get campaign",
+	Usage:   "Get a campaign",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -31,7 +31,7 @@ var campaignsRetrieve = cli.Command{
 
 var campaignsList = cli.Command{
 	Name:            "list",
-	Usage:           "List campaigns",
+	Usage:           "Returns all campaigns for the organization ordered by creation date descending.\nNo pagination.",
 	Suggest:         true,
 	Flags:           []cli.Flag{},
 	Action:          handleCampaignsList,

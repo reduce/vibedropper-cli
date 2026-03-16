@@ -3,6 +3,7 @@
 package cmd
 
 import (
+	"bytes"
 	"compress/gzip"
 	"context"
 	"fmt"
@@ -12,20 +13,23 @@ import (
 	"strings"
 
 	"github.com/reduce/vibedropper-cli/internal/autocomplete"
+	"github.com/reduce/vibedropper-cli/internal/requestflag"
 	docs "github.com/urfave/cli-docs/v3"
 	"github.com/urfave/cli/v3"
 )
 
 var (
-	Command *cli.Command
+	Command            *cli.Command
+	CommandErrorBuffer bytes.Buffer
 )
 
 func init() {
 	Command = &cli.Command{
-		Name:    "vibedropper",
-		Usage:   "CLI for the vibedropper API",
-		Suggest: true,
-		Version: Version,
+		Name:      "vibedropper",
+		Usage:     "CLI for the vibedropper API",
+		Suggest:   true,
+		Version:   Version,
+		ErrWriter: &CommandErrorBuffer,
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "debug",
@@ -66,6 +70,11 @@ func init() {
 				Name:  "transform-error",
 				Usage: "The GJSON transformation for errors.",
 			},
+			&requestflag.Flag[string]{
+				Name:    "api-key",
+				Usage:   "API key from Organization Settings > API. Use header: Authorization: Bearer <your_key> or X-API-Key: <your_key>",
+				Sources: cli.EnvVars("VIBEDROPPER_API_KEY"),
+			},
 		},
 		Commands: []*cli.Command{
 			{
@@ -104,6 +113,49 @@ func init() {
 				Commands: []*cli.Command{
 					&campaignsRetrieve,
 					&campaignsList,
+				},
+			},
+			{
+				Name:     "forms",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&formsRetrieve,
+					&formsUpdate,
+					&formsList,
+					&formsDelete,
+					&formsListSubmissions,
+				},
+			},
+			{
+				Name:     "knowledge-bases",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&knowledgeBasesRetrieve,
+					&knowledgeBasesUpdate,
+					&knowledgeBasesList,
+					&knowledgeBasesDelete,
+				},
+			},
+			{
+				Name:     "knowledge-bases:articles",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&knowledgeBasesArticlesCreate,
+					&knowledgeBasesArticlesList,
+				},
+			},
+			{
+				Name:     "pages",
+				Category: "API RESOURCE",
+				Suggest:  true,
+				Commands: []*cli.Command{
+					&pagesRetrieve,
+					&pagesUpdate,
+					&pagesList,
+					&pagesDelete,
 				},
 			},
 			{
