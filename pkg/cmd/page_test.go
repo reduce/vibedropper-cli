@@ -12,8 +12,9 @@ func TestPagesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "pages", "retrieve",
+			t,
 			"--api-key", "string",
+			"pages", "retrieve",
 			"--page-id", "pageId",
 		)
 	})
@@ -23,8 +24,9 @@ func TestPagesUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "pages", "update",
+			t,
 			"--api-key", "string",
+			"pages", "update",
 			"--page-id", "pageId",
 			"--description", "description",
 			"--name", "name",
@@ -39,8 +41,9 @@ func TestPagesUpdate(t *testing.T) {
 			"name: name\n" +
 			"status: DRAFT\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "pages", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"pages", "update",
 			"--page-id", "pageId",
 		)
 	})
@@ -50,8 +53,9 @@ func TestPagesList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "pages", "list",
+			t,
 			"--api-key", "string",
+			"pages", "list",
 			"--limit", "100",
 			"--page", "0",
 			"--status", "DRAFT",
@@ -63,8 +67,9 @@ func TestPagesDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "pages", "delete",
+			t,
 			"--api-key", "string",
+			"pages", "delete",
 			"--page-id", "pageId",
 		)
 	})

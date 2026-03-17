@@ -12,8 +12,9 @@ func TestFormsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "forms", "retrieve",
+			t,
 			"--api-key", "string",
+			"forms", "retrieve",
 			"--form-id", "formId",
 		)
 	})
@@ -23,8 +24,9 @@ func TestFormsUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "forms", "update",
+			t,
 			"--api-key", "string",
+			"forms", "update",
 			"--form-id", "formId",
 			"--description", "description",
 			"--list-id", "listId",
@@ -43,8 +45,9 @@ func TestFormsUpdate(t *testing.T) {
 			"successMessage: successMessage\n" +
 			"title: title\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "forms", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"forms", "update",
 			"--form-id", "formId",
 		)
 	})
@@ -54,8 +57,9 @@ func TestFormsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "forms", "list",
+			t,
 			"--api-key", "string",
+			"forms", "list",
 			"--limit", "100",
 			"--page", "0",
 			"--status", "DRAFT",
@@ -67,8 +71,9 @@ func TestFormsDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "forms", "delete",
+			t,
 			"--api-key", "string",
+			"forms", "delete",
 			"--form-id", "formId",
 		)
 	})
@@ -78,8 +83,9 @@ func TestFormsListSubmissions(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "forms", "list-submissions",
+			t,
 			"--api-key", "string",
+			"forms", "list-submissions",
 			"--form-id", "formId",
 			"--limit", "100",
 			"--page", "0",

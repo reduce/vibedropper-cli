@@ -12,8 +12,9 @@ func TestCampaignsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "campaigns", "retrieve",
+			t,
 			"--api-key", "string",
+			"campaigns", "retrieve",
 			"--campaign-id", "campaignId",
 		)
 	})
@@ -23,8 +24,9 @@ func TestCampaignsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "campaigns", "list",
+			t,
 			"--api-key", "string",
+			"campaigns", "list",
 		)
 	})
 }
