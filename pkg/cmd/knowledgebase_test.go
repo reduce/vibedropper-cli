@@ -12,8 +12,9 @@ func TestKnowledgeBasesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "knowledge-bases", "retrieve",
+			t,
 			"--api-key", "string",
+			"knowledge-bases", "retrieve",
 			"--kb-id", "kbId",
 		)
 	})
@@ -23,8 +24,9 @@ func TestKnowledgeBasesUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "knowledge-bases", "update",
+			t,
 			"--api-key", "string",
+			"knowledge-bases", "update",
 			"--kb-id", "kbId",
 			"--description", "description",
 			"--name", "name",
@@ -39,8 +41,9 @@ func TestKnowledgeBasesUpdate(t *testing.T) {
 			"name: name\n" +
 			"sortOrder: 0\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "knowledge-bases", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"knowledge-bases", "update",
 			"--kb-id", "kbId",
 		)
 	})
@@ -50,8 +53,9 @@ func TestKnowledgeBasesList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "knowledge-bases", "list",
+			t,
 			"--api-key", "string",
+			"knowledge-bases", "list",
 		)
 	})
 }
@@ -60,8 +64,9 @@ func TestKnowledgeBasesDelete(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "knowledge-bases", "delete",
+			t,
 			"--api-key", "string",
+			"knowledge-bases", "delete",
 			"--kb-id", "kbId",
 		)
 	})

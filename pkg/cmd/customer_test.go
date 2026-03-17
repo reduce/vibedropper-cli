@@ -12,8 +12,9 @@ func TestCustomersRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "customers", "retrieve",
+			t,
 			"--api-key", "string",
+			"customers", "retrieve",
 			"--customer-id", "customerId",
 		)
 	})
@@ -23,8 +24,9 @@ func TestCustomersUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "customers", "update",
+			t,
 			"--api-key", "string",
+			"customers", "update",
 			"--customer-id", "customerId",
 			"--address-line1", "addressLine1",
 			"--address-line2", "addressLine2",
@@ -55,8 +57,9 @@ func TestCustomersUpdate(t *testing.T) {
 			"regionId: regionId\n" +
 			"state: state\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
-			t, pipeData, "customers", "update",
+			t, pipeData,
 			"--api-key", "string",
+			"customers", "update",
 			"--customer-id", "customerId",
 		)
 	})
@@ -66,8 +69,9 @@ func TestCustomersList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
-			t, "customers", "list",
+			t,
 			"--api-key", "string",
+			"customers", "list",
 			"--limit", "100",
 			"--page", "0",
 			"--search", "search",
