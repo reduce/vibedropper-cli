@@ -48,6 +48,7 @@ var pagesUpdate = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "status",
+			Usage:    `Allowed values: "DRAFT", "ACTIVE", "ENDED", "ARCHIVED".`,
 			BodyPath: "status",
 		},
 	},

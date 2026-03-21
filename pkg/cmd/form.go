@@ -49,6 +49,7 @@ var formsUpdate = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "status",
+			Usage:    `Allowed values: "DRAFT", "ACTIVE", "ARCHIVED".`,
 			BodyPath: "status",
 		},
 		&requestflag.Flag[any]{
