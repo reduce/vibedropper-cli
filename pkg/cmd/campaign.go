@@ -69,8 +69,9 @@ func handleCampaignsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "campaigns retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "campaigns retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
@@ -101,6 +102,7 @@ func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "campaigns list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "campaigns list", obj, format, explicitFormat, transform)
 }

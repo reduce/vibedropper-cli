@@ -80,8 +80,9 @@ func handleListsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "lists retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleListsList(ctx context.Context, cmd *cli.Command) error {
@@ -114,6 +115,7 @@ func handleListsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "lists list", obj, format, explicitFormat, transform)
 }

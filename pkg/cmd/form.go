@@ -159,8 +159,9 @@ func handleFormsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "forms retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "forms retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleFormsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -201,8 +202,9 @@ func handleFormsUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "forms update", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "forms update", obj, format, explicitFormat, transform)
 }
 
 func handleFormsList(ctx context.Context, cmd *cli.Command) error {
@@ -235,8 +237,9 @@ func handleFormsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "forms list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "forms list", obj, format, explicitFormat, transform)
 }
 
 func handleFormsDelete(ctx context.Context, cmd *cli.Command) error {
@@ -270,8 +273,9 @@ func handleFormsDelete(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "forms delete", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "forms delete", obj, format, explicitFormat, transform)
 }
 
 func handleFormsListSubmissions(ctx context.Context, cmd *cli.Command) error {
@@ -312,6 +316,7 @@ func handleFormsListSubmissions(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "forms list-submissions", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "forms list-submissions", obj, format, explicitFormat, transform)
 }
