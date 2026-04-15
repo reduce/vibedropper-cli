@@ -143,8 +143,9 @@ func handleCustomersRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "customers retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "customers retrieve", obj, format, explicitFormat, transform)
 }
 
 func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -185,8 +186,9 @@ func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "customers update", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "customers update", obj, format, explicitFormat, transform)
 }
 
 func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
@@ -219,6 +221,7 @@ func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "customers list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "customers list", obj, format, explicitFormat, transform)
 }

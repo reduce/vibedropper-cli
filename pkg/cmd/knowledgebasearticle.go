@@ -114,8 +114,9 @@ func handleKnowledgeBasesArticlesCreate(ctx context.Context, cmd *cli.Command) e
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "knowledge-bases:articles create", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "knowledge-bases:articles create", obj, format, explicitFormat, transform)
 }
 
 func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) error {
@@ -156,6 +157,7 @@ func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) err
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "knowledge-bases:articles list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "knowledge-bases:articles list", obj, format, explicitFormat, transform)
 }

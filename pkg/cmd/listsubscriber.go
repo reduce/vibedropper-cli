@@ -116,8 +116,9 @@ func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "lists:subscribers list", obj, format, explicitFormat, transform)
 }
 
 func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
@@ -158,8 +159,9 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers add", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "lists:subscribers add", obj, format, explicitFormat, transform)
 }
 
 func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
@@ -202,6 +204,7 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers remove", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "lists:subscribers remove", obj, format, explicitFormat, transform)
 }

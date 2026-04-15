@@ -126,8 +126,9 @@ func handlePagesRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "pages retrieve", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "pages retrieve", obj, format, explicitFormat, transform)
 }
 
 func handlePagesUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -168,8 +169,9 @@ func handlePagesUpdate(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "pages update", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "pages update", obj, format, explicitFormat, transform)
 }
 
 func handlePagesList(ctx context.Context, cmd *cli.Command) error {
@@ -202,8 +204,9 @@ func handlePagesList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "pages list", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "pages list", obj, format, explicitFormat, transform)
 }
 
 func handlePagesDelete(ctx context.Context, cmd *cli.Command) error {
@@ -237,6 +240,7 @@ func handlePagesDelete(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "pages delete", obj, format, transform)
+	return ShowJSON(os.Stdout, os.Stderr, "pages delete", obj, format, explicitFormat, transform)
 }
