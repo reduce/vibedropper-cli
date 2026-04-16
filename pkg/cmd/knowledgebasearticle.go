@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/reduce/vibedropper-cli/internal/apiquery"
 	"github.com/reduce/vibedropper-cli/internal/requestflag"
@@ -116,7 +115,12 @@ func handleKnowledgeBasesArticlesCreate(ctx context.Context, cmd *cli.Command) e
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "knowledge-bases:articles create", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "knowledge-bases:articles create",
+		Transform:      transform,
+	})
 }
 
 func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) error {
@@ -159,5 +163,10 @@ func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) err
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "knowledge-bases:articles list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "knowledge-bases:articles list",
+		Transform:      transform,
+	})
 }

@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/reduce/vibedropper-cli/internal/apiquery"
 	"github.com/reduce/vibedropper-cli/internal/requestflag"
@@ -161,7 +160,12 @@ func handleFormsRetrieve(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "forms retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "forms retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleFormsUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -204,7 +208,12 @@ func handleFormsUpdate(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "forms update", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "forms update",
+		Transform:      transform,
+	})
 }
 
 func handleFormsList(ctx context.Context, cmd *cli.Command) error {
@@ -239,7 +248,12 @@ func handleFormsList(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "forms list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "forms list",
+		Transform:      transform,
+	})
 }
 
 func handleFormsDelete(ctx context.Context, cmd *cli.Command) error {
@@ -275,7 +289,12 @@ func handleFormsDelete(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "forms delete", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "forms delete",
+		Transform:      transform,
+	})
 }
 
 func handleFormsListSubmissions(ctx context.Context, cmd *cli.Command) error {
@@ -318,5 +337,10 @@ func handleFormsListSubmissions(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "forms list-submissions", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "forms list-submissions",
+		Transform:      transform,
+	})
 }
