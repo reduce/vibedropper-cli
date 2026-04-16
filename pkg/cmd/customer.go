@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/reduce/vibedropper-cli/internal/apiquery"
 	"github.com/reduce/vibedropper-cli/internal/requestflag"
@@ -145,7 +144,12 @@ func handleCustomersRetrieve(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "customers retrieve", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "customers retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
@@ -188,7 +192,12 @@ func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "customers update", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "customers update",
+		Transform:      transform,
+	})
 }
 
 func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
@@ -223,5 +232,10 @@ func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, os.Stderr, "customers list", obj, format, explicitFormat, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		Title:          "customers list",
+		Transform:      transform,
+	})
 }
