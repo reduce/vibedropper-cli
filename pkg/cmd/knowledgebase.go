@@ -113,6 +113,7 @@ func handleKnowledgeBasesRetrieve(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "knowledge-bases retrieve",
 		Transform:      transform,
 	})
@@ -161,6 +162,7 @@ func handleKnowledgeBasesUpdate(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "knowledge-bases update",
 		Transform:      transform,
 	})
@@ -199,6 +201,7 @@ func handleKnowledgeBasesList(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "knowledge-bases list",
 		Transform:      transform,
 	})
