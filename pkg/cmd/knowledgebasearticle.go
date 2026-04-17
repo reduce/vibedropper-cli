@@ -118,6 +118,7 @@ func handleKnowledgeBasesArticlesCreate(ctx context.Context, cmd *cli.Command) e
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "knowledge-bases:articles create",
 		Transform:      transform,
 	})
@@ -166,6 +167,7 @@ func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) err
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "knowledge-bases:articles list",
 		Transform:      transform,
 	})

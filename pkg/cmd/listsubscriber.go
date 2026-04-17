@@ -120,6 +120,7 @@ func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "lists:subscribers list",
 		Transform:      transform,
 	})
@@ -168,6 +169,7 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "lists:subscribers add",
 		Transform:      transform,
 	})
@@ -218,6 +220,7 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 	return ShowJSON(obj, ShowJSONOpts{
 		ExplicitFormat: explicitFormat,
 		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
 		Title:          "lists:subscribers remove",
 		Transform:      transform,
 	})
