@@ -28,7 +28,7 @@ var knowledgeBasesArticlesCreate = cli.Command{
 			Required: true,
 			BodyPath: "title",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "category-id",
 			BodyPath: "categoryId",
 		},
@@ -37,7 +37,7 @@ var knowledgeBasesArticlesCreate = cli.Command{
 			Usage:    "HTML content",
 			BodyPath: "content",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "excerpt",
 			BodyPath: "excerpt",
 		},
