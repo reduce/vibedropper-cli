@@ -20,8 +20,9 @@ var pagesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "page-id",
-			Required: true,
+			Name:      "page-id",
+			Required:  true,
+			PathParam: "pageId",
 		},
 	},
 	Action:          handlePagesRetrieve,
@@ -34,8 +35,9 @@ var pagesUpdate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "page-id",
-			Required: true,
+			Name:      "page-id",
+			Required:  true,
+			PathParam: "pageId",
 		},
 		&requestflag.Flag[*string]{
 			Name:     "description",
@@ -86,8 +88,9 @@ var pagesDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "page-id",
-			Required: true,
+			Name:      "page-id",
+			Required:  true,
+			PathParam: "pageId",
 		},
 	},
 	Action:          handlePagesDelete,
@@ -147,8 +150,6 @@ func handlePagesUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.PageUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -159,6 +160,8 @@ func handlePagesUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.PageUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -193,8 +196,6 @@ func handlePagesList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.PageListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -205,6 +206,8 @@ func handlePagesList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.PageListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

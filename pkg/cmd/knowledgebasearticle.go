@@ -20,8 +20,9 @@ var knowledgeBasesArticlesCreate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "kb-id",
-			Required: true,
+			Name:      "kb-id",
+			Required:  true,
+			PathParam: "kbId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "title",
@@ -57,8 +58,9 @@ var knowledgeBasesArticlesList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "kb-id",
-			Required: true,
+			Name:      "kb-id",
+			Required:  true,
+			PathParam: "kbId",
 		},
 		&requestflag.Flag[int64]{
 			Name:      "limit",
@@ -86,8 +88,6 @@ func handleKnowledgeBasesArticlesCreate(ctx context.Context, cmd *cli.Command) e
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.KnowledgeBaseArticleNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -98,6 +98,8 @@ func handleKnowledgeBasesArticlesCreate(ctx context.Context, cmd *cli.Command) e
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.KnowledgeBaseArticleNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -135,8 +137,6 @@ func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) err
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.KnowledgeBaseArticleListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -147,6 +147,8 @@ func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) err
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.KnowledgeBaseArticleListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
