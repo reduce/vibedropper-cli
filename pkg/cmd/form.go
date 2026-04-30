@@ -37,11 +37,11 @@ var formsUpdate = cli.Command{
 			Name:     "form-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "description",
 			BodyPath: "description",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "list-id",
 			Usage:    "List to subscribe form submitters to",
 			BodyPath: "listId",
@@ -51,7 +51,7 @@ var formsUpdate = cli.Command{
 			Usage:    `Allowed values: "DRAFT", "ACTIVE", "ARCHIVED".`,
 			BodyPath: "status",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "success-message",
 			BodyPath: "successMessage",
 		},

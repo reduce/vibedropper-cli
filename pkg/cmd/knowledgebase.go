@@ -37,7 +37,7 @@ var knowledgeBasesUpdate = cli.Command{
 			Name:     "kb-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "description",
 			BodyPath: "description",
 		},

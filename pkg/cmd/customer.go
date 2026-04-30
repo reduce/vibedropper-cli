@@ -37,27 +37,27 @@ var customersUpdate = cli.Command{
 			Name:     "customer-id",
 			Required: true,
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "address-line1",
 			BodyPath: "addressLine1",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "address-line2",
 			BodyPath: "addressLine2",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "city",
 			BodyPath: "city",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "country",
 			BodyPath: "country",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "first-name",
 			BodyPath: "firstName",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "last-name",
 			BodyPath: "lastName",
 		},
@@ -65,19 +65,19 @@ var customersUpdate = cli.Command{
 			Name:     "name",
 			BodyPath: "name",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "pickup-location-id",
 			BodyPath: "pickupLocationId",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "postal-code",
 			BodyPath: "postalCode",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "region-id",
 			BodyPath: "regionId",
 		},
-		&requestflag.Flag[any]{
+		&requestflag.Flag[*string]{
 			Name:     "state",
 			BodyPath: "state",
 		},
