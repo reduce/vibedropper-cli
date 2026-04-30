@@ -20,8 +20,9 @@ var campaignsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "campaign-id",
-			Required: true,
+			Name:      "campaign-id",
+			Required:  true,
+			PathParam: "campaignId",
 		},
 	},
 	Action:          handleCampaignsRetrieve,

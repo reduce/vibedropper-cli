@@ -20,8 +20,9 @@ var listsSubscribersList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "listId",
 		},
 	},
 	Action:          handleListsSubscribersList,
@@ -34,8 +35,9 @@ var listsSubscribersAdd = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "listId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "email",
@@ -72,12 +74,14 @@ var listsSubscribersRemove = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "listId",
 		},
 		&requestflag.Flag[string]{
-			Name:     "subscriber-id",
-			Required: true,
+			Name:      "subscriber-id",
+			Required:  true,
+			PathParam: "subscriberId",
 		},
 	},
 	Action:          handleListsSubscribersRemove,
@@ -137,8 +141,6 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.ListSubscriberAddParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -149,6 +151,8 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.ListSubscriberAddParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -186,10 +190,6 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.ListSubscriberRemoveParams{
-		ListID: cmd.Value("list-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -199,6 +199,10 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := vibedropper.ListSubscriberRemoveParams{
+		ListID: cmd.Value("list-id").(string),
 	}
 
 	var res []byte

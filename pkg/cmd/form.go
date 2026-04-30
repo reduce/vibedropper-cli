@@ -20,8 +20,9 @@ var formsRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "form-id",
-			Required: true,
+			Name:      "form-id",
+			Required:  true,
+			PathParam: "formId",
 		},
 	},
 	Action:          handleFormsRetrieve,
@@ -34,8 +35,9 @@ var formsUpdate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "form-id",
-			Required: true,
+			Name:      "form-id",
+			Required:  true,
+			PathParam: "formId",
 		},
 		&requestflag.Flag[*string]{
 			Name:     "description",
@@ -95,8 +97,9 @@ var formsDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "form-id",
-			Required: true,
+			Name:      "form-id",
+			Required:  true,
+			PathParam: "formId",
 		},
 	},
 	Action:          handleFormsDelete,
@@ -109,8 +112,9 @@ var formsListSubmissions = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "form-id",
-			Required: true,
+			Name:      "form-id",
+			Required:  true,
+			PathParam: "formId",
 		},
 		&requestflag.Flag[int64]{
 			Name:      "limit",
@@ -180,8 +184,6 @@ func handleFormsUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.FormUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -192,6 +194,8 @@ func handleFormsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.FormUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -226,8 +230,6 @@ func handleFormsList(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.FormListParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -238,6 +240,8 @@ func handleFormsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.FormListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -312,8 +316,6 @@ func handleFormsListSubmissions(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.FormListSubmissionsParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -324,6 +326,8 @@ func handleFormsListSubmissions(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.FormListSubmissionsParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

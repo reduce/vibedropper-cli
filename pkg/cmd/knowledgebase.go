@@ -20,8 +20,9 @@ var knowledgeBasesRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "kb-id",
-			Required: true,
+			Name:      "kb-id",
+			Required:  true,
+			PathParam: "kbId",
 		},
 	},
 	Action:          handleKnowledgeBasesRetrieve,
@@ -34,8 +35,9 @@ var knowledgeBasesUpdate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "kb-id",
-			Required: true,
+			Name:      "kb-id",
+			Required:  true,
+			PathParam: "kbId",
 		},
 		&requestflag.Flag[*string]{
 			Name:     "description",
@@ -69,8 +71,9 @@ var knowledgeBasesDelete = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "kb-id",
-			Required: true,
+			Name:      "kb-id",
+			Required:  true,
+			PathParam: "kbId",
 		},
 	},
 	Action:          handleKnowledgeBasesDelete,
@@ -130,8 +133,6 @@ func handleKnowledgeBasesUpdate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.KnowledgeBaseUpdateParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -142,6 +143,8 @@ func handleKnowledgeBasesUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.KnowledgeBaseUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
