@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/reduce/vibedropper-cli/internal/apiquery"
 	"github.com/reduce/vibedropper-cli/internal/requestflag"
@@ -17,12 +16,13 @@ import (
 
 var listsSubscribersList = cli.Command{
 	Name:    "list",
-	Usage:   "List subscribers",
+	Usage:   "Returns all subscribers for the list ordered by subscribe date descending.\nIncludes linked customer data.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "listId",
 		},
 	},
 	Action:          handleListsSubscribersList,
@@ -31,12 +31,13 @@ var listsSubscribersList = cli.Command{
 
 var listsSubscribersAdd = cli.Command{
 	Name:    "add",
-	Usage:   "Add subscriber",
+	Usage:   "Creates or updates the matching customer record and adds a subscriber entry.\nReturns 400 with code `duplicate` if already subscribed.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "listId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "email",
@@ -45,6 +46,7 @@ var listsSubscribersAdd = cli.Command{
 		},
 		&requestflag.Flag[any]{
 			Name:     "custom-fields",
+			Usage:    "Arbitrary key-value metadata",
 			BodyPath: "customFields",
 		},
 		&requestflag.Flag[string]{
@@ -53,10 +55,12 @@ var listsSubscribersAdd = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "pickup-location-id",
+			Usage:    "Pickup location ID (must belong to the given regionId)",
 			BodyPath: "pickupLocationId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "region-id",
+			Usage:    "Region ID to assign to the customer",
 			BodyPath: "regionId",
 		},
 	},
@@ -66,16 +70,18 @@ var listsSubscribersAdd = cli.Command{
 
 var listsSubscribersRemove = cli.Command{
 	Name:    "remove",
-	Usage:   "Remove subscriber",
+	Usage:   "Remove a subscriber from a list",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "list-id",
-			Required: true,
+			Name:      "list-id",
+			Required:  true,
+			PathParam: "listId",
 		},
 		&requestflag.Flag[string]{
-			Name:     "subscriber-id",
-			Required: true,
+			Name:      "subscriber-id",
+			Required:  true,
+			PathParam: "subscriberId",
 		},
 	},
 	Action:          handleListsSubscribersRemove,
@@ -113,8 +119,15 @@ func handleListsSubscribersList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "lists:subscribers list",
+		Transform:      transform,
+	})
 }
 
 func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
@@ -128,8 +141,6 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.ListSubscriberAddParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -140,6 +151,8 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := vibedropper.ListSubscriberAddParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -155,8 +168,15 @@ func handleListsSubscribersAdd(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers add", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "lists:subscribers add",
+		Transform:      transform,
+	})
 }
 
 func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
@@ -170,10 +190,6 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := vibedropper.ListSubscriberRemoveParams{
-		ListID: cmd.Value("list-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -183,6 +199,10 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := vibedropper.ListSubscriberRemoveParams{
+		ListID: cmd.Value("list-id").(string),
 	}
 
 	var res []byte
@@ -199,6 +219,13 @@ func handleListsSubscribersRemove(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "lists:subscribers remove", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "lists:subscribers remove",
+		Transform:      transform,
+	})
 }

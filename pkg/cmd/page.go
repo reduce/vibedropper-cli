@@ -14,83 +14,52 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var customersRetrieve = cli.Command{
+var pagesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get a customer",
+	Usage:   "Get a page",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "customer-id",
+			Name:      "page-id",
 			Required:  true,
-			PathParam: "customerId",
+			PathParam: "pageId",
 		},
 	},
-	Action:          handleCustomersRetrieve,
+	Action:          handlePagesRetrieve,
 	HideHelpCommand: true,
 }
 
-var customersUpdate = cli.Command{
+var pagesUpdate = cli.Command{
 	Name:    "update",
-	Usage:   "Update a customer",
+	Usage:   "Update a page",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "customer-id",
+			Name:      "page-id",
 			Required:  true,
-			PathParam: "customerId",
+			PathParam: "pageId",
 		},
 		&requestflag.Flag[*string]{
-			Name:     "address-line1",
-			BodyPath: "addressLine1",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "address-line2",
-			BodyPath: "addressLine2",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "city",
-			BodyPath: "city",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "country",
-			BodyPath: "country",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "first-name",
-			BodyPath: "firstName",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "last-name",
-			BodyPath: "lastName",
+			Name:     "description",
+			BodyPath: "description",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
 			BodyPath: "name",
 		},
-		&requestflag.Flag[*string]{
-			Name:     "pickup-location-id",
-			BodyPath: "pickupLocationId",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "postal-code",
-			BodyPath: "postalCode",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "region-id",
-			BodyPath: "regionId",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "state",
-			BodyPath: "state",
+		&requestflag.Flag[string]{
+			Name:     "status",
+			Usage:    `Allowed values: "DRAFT", "ACTIVE", "ENDED", "ARCHIVED".`,
+			BodyPath: "status",
 		},
 	},
-	Action:          handleCustomersUpdate,
+	Action:          handlePagesUpdate,
 	HideHelpCommand: true,
 }
 
-var customersList = cli.Command{
+var pagesList = cli.Command{
 	Name:    "list",
-	Usage:   "List customers",
+	Usage:   "List pages",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[int64]{
@@ -104,20 +73,35 @@ var customersList = cli.Command{
 			QueryPath: "page",
 		},
 		&requestflag.Flag[string]{
-			Name:      "search",
-			Usage:     "Search by name or email (case-insensitive)",
-			QueryPath: "search",
+			Name:      "status",
+			Usage:     `Filter by status. Omit or use "all" to return all pages.`,
+			QueryPath: "status",
 		},
 	},
-	Action:          handleCustomersList,
+	Action:          handlePagesList,
 	HideHelpCommand: true,
 }
 
-func handleCustomersRetrieve(ctx context.Context, cmd *cli.Command) error {
+var pagesDelete = cli.Command{
+	Name:    "delete",
+	Usage:   "Delete a page",
+	Suggest: true,
+	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "page-id",
+			Required:  true,
+			PathParam: "pageId",
+		},
+	},
+	Action:          handlePagesDelete,
+	HideHelpCommand: true,
+}
+
+func handlePagesRetrieve(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("customer-id") && len(unusedArgs) > 0 {
-		cmd.Set("customer-id", unusedArgs[0])
+	if !cmd.IsSet("page-id") && len(unusedArgs) > 0 {
+		cmd.Set("page-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -137,7 +121,7 @@ func handleCustomersRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Customers.Get(ctx, cmd.Value("customer-id").(string), options...)
+	_, err = client.Pages.Get(ctx, cmd.Value("page-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -150,16 +134,16 @@ func handleCustomersRetrieve(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "customers retrieve",
+		Title:          "pages retrieve",
 		Transform:      transform,
 	})
 }
 
-func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
+func handlePagesUpdate(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("customer-id") && len(unusedArgs) > 0 {
-		cmd.Set("customer-id", unusedArgs[0])
+	if !cmd.IsSet("page-id") && len(unusedArgs) > 0 {
+		cmd.Set("page-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -177,13 +161,13 @@ func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	params := vibedropper.CustomerUpdateParams{}
+	params := vibedropper.PageUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Customers.Update(
+	_, err = client.Pages.Update(
 		ctx,
-		cmd.Value("customer-id").(string),
+		cmd.Value("page-id").(string),
 		params,
 		options...,
 	)
@@ -199,12 +183,12 @@ func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "customers update",
+		Title:          "pages update",
 		Transform:      transform,
 	})
 }
 
-func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
+func handlePagesList(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 
@@ -223,11 +207,11 @@ func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	params := vibedropper.CustomerListParams{}
+	params := vibedropper.PageListParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Customers.List(ctx, params, options...)
+	_, err = client.Pages.List(ctx, params, options...)
 	if err != nil {
 		return err
 	}
@@ -240,7 +224,49 @@ func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "customers list",
+		Title:          "pages list",
+		Transform:      transform,
+	})
+}
+
+func handlePagesDelete(ctx context.Context, cmd *cli.Command) error {
+	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("page-id") && len(unusedArgs) > 0 {
+		cmd.Set("page-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.Pages.Delete(ctx, cmd.Value("page-id").(string), options...)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "pages delete",
 		Transform:      transform,
 	})
 }

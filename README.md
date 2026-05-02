@@ -49,14 +49,20 @@ vibedropper [resource] <command> [flags...]
 
 ```sh
 vibedropper lists list \
-  --limit 0 \
-  --page 0
+  --api-key 'My API Key'
 ```
 
 For details about specific commands, use the `--help` flag.
 
-### Global Flags
+### Environment variables
 
+| Environment variable  | Description                                                                                                     | Required |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- | -------- |
+| `VIBEDROPPER_API_KEY` | API key from Organization Settings > API. Use header: Authorization: Bearer <your_key> or X-API-Key: <your_key> | yes      |
+
+### Global flags
+
+- `--api-key` - API key from Organization Settings > API. Use header: Authorization: Bearer <your_key> or X-API-Key: <your_key> (can also be set with `VIBEDROPPER_API_KEY` env var)
 - `--help` - Show command line usage
 - `--debug` - Enable debug logging (includes HTTP request/response details)
 - `--version`, `-v` - Show the CLI version
@@ -105,3 +111,23 @@ base64-encoding). Note that absolute paths will begin with `@file://` or
 ```bash
 vibedropper <command> --arg @data://file.txt
 ```
+
+## Linking different Go SDK versions
+
+You can link the CLI against a different version of the Vibedropper Go SDK
+for development purposes using the `./scripts/link` script.
+
+To link to a specific version from a repository (version can be a branch,
+git tag, or commit hash):
+
+```bash
+./scripts/link github.com/org/repo@version
+```
+
+To link to a local copy of the SDK:
+
+```bash
+./scripts/link ../path/to/vibedropper-go
+```
+
+If you run the link script without any arguments, it will default to `../vibedropper-go`.

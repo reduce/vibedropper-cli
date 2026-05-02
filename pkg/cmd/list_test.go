@@ -10,19 +10,25 @@ import (
 
 func TestListsRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists", "retrieve",
-		"--list-id", "listId",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"lists", "retrieve",
+			"--list-id", "listId",
+		)
+	})
 }
 
 func TestListsList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
-	mocktest.TestRunMockTestWithFlags(
-		t,
-		"lists", "list",
-		"--limit", "0",
-		"--page", "0",
-	)
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"lists", "list",
+			"--limit", "100",
+			"--page", "0",
+		)
+	})
 }

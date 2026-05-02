@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/reduce/vibedropper-cli/internal/apiquery"
 	"github.com/reduce/vibedropper-cli/internal/requestflag"
@@ -17,12 +16,13 @@ import (
 
 var campaignsRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get campaign",
+	Usage:   "Get a campaign",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "campaign-id",
-			Required: true,
+			Name:      "campaign-id",
+			Required:  true,
+			PathParam: "campaignId",
 		},
 	},
 	Action:          handleCampaignsRetrieve,
@@ -31,7 +31,7 @@ var campaignsRetrieve = cli.Command{
 
 var campaignsList = cli.Command{
 	Name:            "list",
-	Usage:           "List campaigns",
+	Usage:           "Returns all campaigns for the organization ordered by creation date descending.\nNo pagination.",
 	Suggest:         true,
 	Flags:           []cli.Flag{},
 	Action:          handleCampaignsList,
@@ -69,8 +69,15 @@ func handleCampaignsRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "campaigns retrieve", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "campaigns retrieve",
+		Transform:      transform,
+	})
 }
 
 func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
@@ -101,6 +108,13 @@ func handleCampaignsList(ctx context.Context, cmd *cli.Command) error {
 
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
 	transform := cmd.Root().String("transform")
-	return ShowJSON(os.Stdout, "campaigns list", obj, format, transform)
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "campaigns list",
+		Transform:      transform,
+	})
 }

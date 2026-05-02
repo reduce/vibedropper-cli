@@ -14,26 +14,54 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var listsRetrieve = cli.Command{
-	Name:    "retrieve",
-	Usage:   "Get a list",
+var knowledgeBasesArticlesCreate = cli.Command{
+	Name:    "create",
+	Usage:   "Create an article",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "list-id",
+			Name:      "kb-id",
 			Required:  true,
-			PathParam: "listId",
+			PathParam: "kbId",
+		},
+		&requestflag.Flag[string]{
+			Name:     "title",
+			Required: true,
+			BodyPath: "title",
+		},
+		&requestflag.Flag[*string]{
+			Name:     "category-id",
+			BodyPath: "categoryId",
+		},
+		&requestflag.Flag[string]{
+			Name:     "content",
+			Usage:    "HTML content",
+			BodyPath: "content",
+		},
+		&requestflag.Flag[*string]{
+			Name:     "excerpt",
+			BodyPath: "excerpt",
+		},
+		&requestflag.Flag[bool]{
+			Name:     "published",
+			Default:  true,
+			BodyPath: "published",
 		},
 	},
-	Action:          handleListsRetrieve,
+	Action:          handleKnowledgeBasesArticlesCreate,
 	HideHelpCommand: true,
 }
 
-var listsList = cli.Command{
+var knowledgeBasesArticlesList = cli.Command{
 	Name:    "list",
-	Usage:   "List lists",
+	Usage:   "List articles in a knowledge base",
 	Suggest: true,
 	Flags: []cli.Flag{
+		&requestflag.Flag[string]{
+			Name:      "kb-id",
+			Required:  true,
+			PathParam: "kbId",
+		},
 		&requestflag.Flag[int64]{
 			Name:      "limit",
 			Default:   20,
@@ -45,15 +73,64 @@ var listsList = cli.Command{
 			QueryPath: "page",
 		},
 	},
-	Action:          handleListsList,
+	Action:          handleKnowledgeBasesArticlesList,
 	HideHelpCommand: true,
 }
 
-func handleListsRetrieve(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesArticlesCreate(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("list-id") && len(unusedArgs) > 0 {
-		cmd.Set("list-id", unusedArgs[0])
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		ApplicationJSON,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	params := vibedropper.KnowledgeBaseArticleNewParams{}
+
+	var res []byte
+	options = append(options, option.WithResponseBodyInto(&res))
+	_, err = client.KnowledgeBases.Articles.New(
+		ctx,
+		cmd.Value("kb-id").(string),
+		params,
+		options...,
+	)
+	if err != nil {
+		return err
+	}
+
+	obj := gjson.ParseBytes(res)
+	format := cmd.Root().String("format")
+	explicitFormat := cmd.Root().IsSet("format")
+	transform := cmd.Root().String("transform")
+	return ShowJSON(obj, ShowJSONOpts{
+		ExplicitFormat: explicitFormat,
+		Format:         format,
+		RawOutput:      cmd.Root().Bool("raw-output"),
+		Title:          "knowledge-bases:articles create",
+		Transform:      transform,
+	})
+}
+
+func handleKnowledgeBasesArticlesList(ctx context.Context, cmd *cli.Command) error {
+	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -71,54 +148,20 @@ func handleListsRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	params := vibedropper.KnowledgeBaseArticleListParams{}
+
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Lists.Get(ctx, cmd.Value("list-id").(string), options...)
-	if err != nil {
-		return err
-	}
-
-	obj := gjson.ParseBytes(res)
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	return ShowJSON(obj, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "lists retrieve",
-		Transform:      transform,
-	})
-}
-
-func handleListsList(ctx context.Context, cmd *cli.Command) error {
-	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
+	_, err = client.KnowledgeBases.Articles.List(
+		ctx,
+		cmd.Value("kb-id").(string),
+		params,
+		options...,
 	)
 	if err != nil {
 		return err
 	}
 
-	params := vibedropper.ListListParams{}
-
-	var res []byte
-	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Lists.List(ctx, params, options...)
-	if err != nil {
-		return err
-	}
-
 	obj := gjson.ParseBytes(res)
 	format := cmd.Root().String("format")
 	explicitFormat := cmd.Root().IsSet("format")
@@ -127,7 +170,7 @@ func handleListsList(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "lists list",
+		Title:          "knowledge-bases:articles list",
 		Transform:      transform,
 	})
 }

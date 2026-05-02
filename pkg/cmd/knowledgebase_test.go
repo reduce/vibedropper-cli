@@ -8,60 +8,66 @@ import (
 	"github.com/reduce/vibedropper-cli/internal/mocktest"
 )
 
-func TestListsSubscribersList(t *testing.T) {
+func TestKnowledgeBasesRetrieve(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
 			t,
 			"--api-key", "string",
-			"lists:subscribers", "list",
-			"--list-id", "listId",
+			"knowledge-bases", "retrieve",
+			"--kb-id", "kbId",
 		)
 	})
 }
 
-func TestListsSubscribersAdd(t *testing.T) {
+func TestKnowledgeBasesUpdate(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
 			t,
 			"--api-key", "string",
-			"lists:subscribers", "add",
-			"--list-id", "listId",
-			"--email", "dev@stainless.com",
-			"--custom-fields", "{}",
+			"knowledge-bases", "update",
+			"--kb-id", "kbId",
+			"--description", "description",
 			"--name", "name",
-			"--pickup-location-id", "pickupLocationId",
-			"--region-id", "regionId",
+			"--sort-order", "0",
 		)
 	})
 
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"email: dev@stainless.com\n" +
-			"customFields: {}\n" +
+			"description: description\n" +
 			"name: name\n" +
-			"pickupLocationId: pickupLocationId\n" +
-			"regionId: regionId\n")
+			"sortOrder: 0\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
 			t, pipeData,
 			"--api-key", "string",
-			"lists:subscribers", "add",
-			"--list-id", "listId",
+			"knowledge-bases", "update",
+			"--kb-id", "kbId",
 		)
 	})
 }
 
-func TestListsSubscribersRemove(t *testing.T) {
+func TestKnowledgeBasesList(t *testing.T) {
 	t.Skip("Mock server tests are disabled")
 	t.Run("regular flags", func(t *testing.T) {
 		mocktest.TestRunMockTestWithFlags(
 			t,
 			"--api-key", "string",
-			"lists:subscribers", "remove",
-			"--list-id", "listId",
-			"--subscriber-id", "subscriberId",
+			"knowledge-bases", "list",
+		)
+	})
+}
+
+func TestKnowledgeBasesDelete(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
+	t.Run("regular flags", func(t *testing.T) {
+		mocktest.TestRunMockTestWithFlags(
+			t,
+			"--api-key", "string",
+			"knowledge-bases", "delete",
+			"--kb-id", "kbId",
 		)
 	})
 }

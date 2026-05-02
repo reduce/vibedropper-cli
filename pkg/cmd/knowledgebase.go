@@ -14,110 +14,77 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var customersRetrieve = cli.Command{
+var knowledgeBasesRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Get a customer",
+	Usage:   "Get a knowledge base",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "customer-id",
+			Name:      "kb-id",
 			Required:  true,
-			PathParam: "customerId",
+			PathParam: "kbId",
 		},
 	},
-	Action:          handleCustomersRetrieve,
+	Action:          handleKnowledgeBasesRetrieve,
 	HideHelpCommand: true,
 }
 
-var customersUpdate = cli.Command{
+var knowledgeBasesUpdate = cli.Command{
 	Name:    "update",
-	Usage:   "Update a customer",
+	Usage:   "Update a knowledge base",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:      "customer-id",
+			Name:      "kb-id",
 			Required:  true,
-			PathParam: "customerId",
+			PathParam: "kbId",
 		},
 		&requestflag.Flag[*string]{
-			Name:     "address-line1",
-			BodyPath: "addressLine1",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "address-line2",
-			BodyPath: "addressLine2",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "city",
-			BodyPath: "city",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "country",
-			BodyPath: "country",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "first-name",
-			BodyPath: "firstName",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "last-name",
-			BodyPath: "lastName",
+			Name:     "description",
+			BodyPath: "description",
 		},
 		&requestflag.Flag[string]{
 			Name:     "name",
 			BodyPath: "name",
 		},
-		&requestflag.Flag[*string]{
-			Name:     "pickup-location-id",
-			BodyPath: "pickupLocationId",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "postal-code",
-			BodyPath: "postalCode",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "region-id",
-			BodyPath: "regionId",
-		},
-		&requestflag.Flag[*string]{
-			Name:     "state",
-			BodyPath: "state",
+		&requestflag.Flag[int64]{
+			Name:     "sort-order",
+			BodyPath: "sortOrder",
 		},
 	},
-	Action:          handleCustomersUpdate,
+	Action:          handleKnowledgeBasesUpdate,
 	HideHelpCommand: true,
 }
 
-var customersList = cli.Command{
-	Name:    "list",
-	Usage:   "List customers",
+var knowledgeBasesList = cli.Command{
+	Name:            "list",
+	Usage:           "Returns all knowledge bases ordered by sortOrder then creation date.",
+	Suggest:         true,
+	Flags:           []cli.Flag{},
+	Action:          handleKnowledgeBasesList,
+	HideHelpCommand: true,
+}
+
+var knowledgeBasesDelete = cli.Command{
+	Name:    "delete",
+	Usage:   "Delete a knowledge base",
 	Suggest: true,
 	Flags: []cli.Flag{
-		&requestflag.Flag[int64]{
-			Name:      "limit",
-			Default:   20,
-			QueryPath: "limit",
-		},
-		&requestflag.Flag[int64]{
-			Name:      "page",
-			Default:   1,
-			QueryPath: "page",
-		},
 		&requestflag.Flag[string]{
-			Name:      "search",
-			Usage:     "Search by name or email (case-insensitive)",
-			QueryPath: "search",
+			Name:      "kb-id",
+			Required:  true,
+			PathParam: "kbId",
 		},
 	},
-	Action:          handleCustomersList,
+	Action:          handleKnowledgeBasesDelete,
 	HideHelpCommand: true,
 }
 
-func handleCustomersRetrieve(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesRetrieve(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("customer-id") && len(unusedArgs) > 0 {
-		cmd.Set("customer-id", unusedArgs[0])
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -137,7 +104,7 @@ func handleCustomersRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Customers.Get(ctx, cmd.Value("customer-id").(string), options...)
+	_, err = client.KnowledgeBases.Get(ctx, cmd.Value("kb-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -150,16 +117,16 @@ func handleCustomersRetrieve(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "customers retrieve",
+		Title:          "knowledge-bases retrieve",
 		Transform:      transform,
 	})
 }
 
-func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesUpdate(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("customer-id") && len(unusedArgs) > 0 {
-		cmd.Set("customer-id", unusedArgs[0])
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
 		unusedArgs = unusedArgs[1:]
 	}
 	if len(unusedArgs) > 0 {
@@ -177,13 +144,13 @@ func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	params := vibedropper.CustomerUpdateParams{}
+	params := vibedropper.KnowledgeBaseUpdateParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Customers.Update(
+	_, err = client.KnowledgeBases.Update(
 		ctx,
-		cmd.Value("customer-id").(string),
+		cmd.Value("kb-id").(string),
 		params,
 		options...,
 	)
@@ -199,12 +166,12 @@ func handleCustomersUpdate(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "customers update",
+		Title:          "knowledge-bases update",
 		Transform:      transform,
 	})
 }
 
-func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
+func handleKnowledgeBasesList(ctx context.Context, cmd *cli.Command) error {
 	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
 
@@ -223,11 +190,9 @@ func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	params := vibedropper.CustomerListParams{}
-
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Customers.List(ctx, params, options...)
+	_, err = client.KnowledgeBases.List(ctx, options...)
 	if err != nil {
 		return err
 	}
@@ -240,7 +205,32 @@ func handleCustomersList(ctx context.Context, cmd *cli.Command) error {
 		ExplicitFormat: explicitFormat,
 		Format:         format,
 		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "customers list",
+		Title:          "knowledge-bases list",
 		Transform:      transform,
 	})
+}
+
+func handleKnowledgeBasesDelete(ctx context.Context, cmd *cli.Command) error {
+	client := vibedropper.NewClient(getDefaultRequestOptions(cmd)...)
+	unusedArgs := cmd.Args().Slice()
+	if !cmd.IsSet("kb-id") && len(unusedArgs) > 0 {
+		cmd.Set("kb-id", unusedArgs[0])
+		unusedArgs = unusedArgs[1:]
+	}
+	if len(unusedArgs) > 0 {
+		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
+	}
+
+	options, err := flagOptions(
+		cmd,
+		apiquery.NestedQueryFormatBrackets,
+		apiquery.ArrayQueryFormatComma,
+		EmptyBody,
+		false,
+	)
+	if err != nil {
+		return err
+	}
+
+	return client.KnowledgeBases.Delete(ctx, cmd.Value("kb-id").(string), options...)
 }
